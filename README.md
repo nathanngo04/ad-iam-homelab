@@ -206,3 +206,4 @@
 
 ![Session 3 checkpoint](Screenshots/42-checkpoint-session3.png)
 
+

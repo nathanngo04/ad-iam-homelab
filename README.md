@@ -223,5 +223,49 @@
 
 ![Both VMs running](Screenshots/46-both-vms-running.png)
 
+## Step 24: Configured WS01 networking with PowerShell
+- **What I did:** Assigned WS01 a static IP of 10.10.10.20/24 with a gateway 10.10.10.1 and DNS pointing to DC01 (10.10.10.10) using New-NetIPAddress and Set-DnsClientServerAddress. Verified with ipconfig /all and nslookup.
+- **Why it matters:** Domain join depends on DNS. Clients find the domain controller by querying DNS, so a workstation must use the DC as its DNS server. Misconfigured DNS is one of the most common causes of failed domain joins.
+- **Issues and how I fixed them:** nslookup showed "DNS request timed out" and "Server: UnKnown" before returning the correct answer. This is a failed reverse lookup, because DC01 has no reverse lookup zone; forward lookups worked.
+
+![WS01 network config](Screenshots/47-ws01-network-config.png)
+
+## Step 25: Activated Windows
+- **What I did:** Investigated a "Windows License is expired" watermark. Confirmed internet access, checked license details with slmgr /dlv and activated online with slmgr /ato.
+- **Why it matters:** An unactivated evaluation can restrict use. Diagnosing the cuase avoided an unnecessary reinstall.
+- **Issues and how I fixed them:** The warning appeared becauase WS01 had no network during setup and couldn't activate. Activation succeeded once networking was configured, and the license now shows valid for 90 days.
+
+![WS01 activated](Screenshots/48-ws01-activated.png)
+
+## Step 26: Joined WS01 to the domain
+- **What I did:** Renamed the computer and joined it to sonderenergy.internal in one command with Add-Computer, using domain admin credentials. Signed in as maria.lopez, completed the forced password change, and verified the domain login and group memberships (SG-IT, SG-IT-HelpDesk) with whoami and whoami /groups.
+- **Why it matters:** Domain join creates a computer account in Active Directory, lets employees sign in with domain credentials checked by the DC, and enables Group Policy. Group memberships travel with the user's login and drive access to resources.
+- **Issues and how I fixed them:** Maria's sign-in was blocked with a Remote Desktop rights error because Hyper-V Enhanced Session connects over RDP, and standard users aren't in the Remote Desktop Users group by default. Switched to a basic session instead of granting unneeded remote access, following least privilege.
+
+![Domain sign-in](Screenshots/49-ws01-domain-sign-in.png)
+
+![Maria desktop](Screenshots/50-maria-desktop.png)
+
+![whoami as Maria](Screenshots/51-maria-whoami.png)
+
+## Step 27: Moved WS01 into the Workstations OU
+- **What I did:** Moved the WS01 computer account from the default Computers container account from the default Computers container to SonderEnergy/Computers/Workstations in ADUC.
+- **Why it matters:** New computers land in the default Computers container, which can't receive Group Policy. Placing WS01 in the Workstations OU lets workstation policies apply to it.
+- **Issues and how I fixed them:** None.
+
+![WS01 in Workstations OU](Screenshots/52-ws01-in-workstations-ou.png)
+
+## Step 28: Session 4 checkpoints
+- **What I did:** Shut down WS01 first, then DC01,
+  and created "Session 4 complete" checkpoints on
+  both VMs.
+- **Why it matters:** Shutting down workstations
+  before the domain controller they depend on
+  mirrors planned maintenance order. Checkpoints
+  save a working domain-joined environment before
+  Group Policy changes in Session 5.
+- **Issues and how I fixed them:** None.
+
+![Session 4 checkpoints](Screenshots/53-checkpoints-session4.png)
 
 

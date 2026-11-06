@@ -206,4 +206,22 @@
 
 ![Session 3 checkpoint](Screenshots/42-checkpoint-session3.png)
 
+## Session 4: Domain-joined Windows 11 Workstation
+
+## Step 23: Created and installed WS01 workstation
+- **What I did:** Created a generation 2 VM named WS01 with 2 virtual processors, a 64 GB dynamically expanding disk, TPM and Secure Boot enabled, and a connection to LabNet. Installed Windows 11 Enterprise Evaluation with a separate local admin account, then lowered memory to 2 GB startup (1 GB minimum, 3 GB maximum) after installation.
+- **Why it matters:** WS01 represents an employee's computer. Windows 11 requires TPM 2.0, Secure Boot, 2 processors, 4 GB RAM to install, and a 64 GB disk, reflecting modern endpoint security baselines. Enterprise edition supports domain join; Windows 11 Home does not.
+- **Issues and how I fixed them:** 
+- Only 2.4 GB was available with DC01 running, below the installer's 4 GB requirement. Hyper-V VM memory doesn't appear in Task Manager's process list. Installed WS01 with DC01 shut down, capped DC01's maximum memory at 3 GB, then reduced WS01 to 2 GB startup after installation.
+- Clicked Finish before capturing the wizard summary; use the VM Settings page instead.
+
+![WS01 settings](Screenshots/43-ws01-settings.png)
+
+![WS01 setup started](Screenshots/44-ws01-setup-started.png)
+
+![WS01 desktop](Screenshots/45-ws01-desktop.png)
+
+![Both VMs running](Screenshots/46-both-vms-running.png)
+
+
 

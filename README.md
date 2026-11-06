@@ -268,4 +268,67 @@
 
 ![Session 4 checkpoints](Screenshots/53-checkpoints-session4.png)
 
+## Session 5: Group Policy
 
+## Step 29: Reviewed the Default Domain Policy
+- **What I did:** Opened the Group Policy Management Console (GPMC) and reviewed the Default Domain Policy's password and lockout settings.
+- **Why it matters:** The default lockout threshold was 0, meaning accounts never lock and password guessing is unlimited. Minimum length was only 7.
+- **Issues and how I fixed them:**
+    - WS01 failed to start from low host memory. Disabled unneeded startup apps, restarted the host, and started DC01 before WS01.
+    - The GPMC Settings report was blocked by IE Enhanced Security Configuration. Allowed only the local about:security_mmc.exe page, keeping we browsing blocked on the DC.
+
+![Default Domain Policy](Screenshots/54-gpmc-default-policy.png)
+
+## Step 30: Hardened password and lockout policy
+- **What I did:** Edited the Default Domain Policy: minimum password length 14, maximum password age 365 days, account lockout threshold 10, lockout duration 15 minutes, and counter reset after 15 minutes.
+- **Why it matters:** Length is the strongest defense against password cracking. Lockout stops brute force guessing. Following NIST SP 800-63B, avoided frequent forced changes that lead to predictable password. Domain password policy only applies from a GPO linked at the domain level.
+- **Issues and how I fixed them:** None.
+
+[!Password policy](Screenshots/55-password-policy.png)
+
+![Lockout policy](Screenshots/56-lockout-policy.png)
+
+## Step 31: Created a workstation security GPO
+- **What I did:** Created and linked SE-Workstation-Security to the Workstations OU, using a naming convention (company prefix, target, purpose). Configured a 15-minute inactivity lock, hid the last signed-in user, and added a legal logon banner.
+- **Why it matters:** Linking at the OU level targets only workstations, not servers. These settings recude risk from unattended computers, avoid exposing valid usernames, and meet common compliance expectations for logon banners.
+- **Issues and how I fixed them:** None.
+
+![Workstation GPO settings](Screenshots/57-workstation-gpo-settings.png)
+
+## Step 32: Applied and verified Group Policy
+- **What I did:** Restarted WS01, confirmed the logon banner and hidden username, then verified applied GPOs with gpresult /scope computer /r. Both SE-Workstation-Security and Default Domain Policy applied.
+- **Why it matters:** gpresult is the first tool for troubleshooting policies that don't seem to apply. It shows which GPOs applied and why.
+- **Issues and how I fixed them:**
+    - Policies didn't appear after the first
+      restart because of Fast Logon Optimization,
+      which applies policy in the background.
+      A second restart applied them.
+    - Elevated on WS01 with the Domain Admin
+      account, which leaves privileged credentials
+      on a workstation where they could be stolen.
+      Restarted WS01 to clear them and used the
+      local admin account afterward, following
+      tiered administration.
+
+![Logon banner](Screenshots/58-ws01-logon-banner.png)
+
+![gpresult output](Screenshots/59-ws01-gpresult.png)
+
+## Step 33: Tested account lockout and unlock
+- **What I did:** Entered 10 wrong passwords for
+  maria.lopez on WS01 to trigger lockout, found
+  the locked account with Search-ADAccount
+  -LockedOut, unlocked it with Unlock-ADAccount,
+  and confirmed she could sign in again.
+- **Why it matters:** Proves the lockout policy
+  stops brute force attempts domain-wide. Finding
+  and unlocking accounts is a common help desk
+  task, and should follow identity verification
+  to prevent social engineering.
+- **Issues and how I fixed them:** None.
+
+![Login delay](Screenshots/60-login-delay.png)
+
+![Maria locked out](Screenshots/61-maria-locked-out.png)
+
+![Unlock Maria](Screenshots/62-unlock-maria.png)

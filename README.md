@@ -315,16 +315,8 @@
 ![gpresult output](Screenshots/59-ws01-gpresult.png)
 
 ## Step 33: Tested account lockout and unlock
-- **What I did:** Entered 10 wrong passwords for
-  maria.lopez on WS01 to trigger lockout, found
-  the locked account with Search-ADAccount
-  -LockedOut, unlocked it with Unlock-ADAccount,
-  and confirmed she could sign in again.
-- **Why it matters:** Proves the lockout policy
-  stops brute force attempts domain-wide. Finding
-  and unlocking accounts is a common help desk
-  task, and should follow identity verification
-  to prevent social engineering.
+- **What I did:** Entered 10 wrong passwords for maria.lopez on WS01 to trigger lockout, found the locked account with Search-ADAccount-LockedOut, unlocked it with Unlock-ADAccount, and confirmed she could sign in again.
+- **Why it matters:** Proves the lockout policy stops brute force attempts domain-wide. Finding and unlocking accounts is a common help desk task, and should follow identity verification to prevent social engineering.
 - **Issues and how I fixed them:** None.
 
 ![Login delay](Screenshots/60-login-delay.png)
@@ -332,3 +324,10 @@
 ![Maria locked out](Screenshots/61-maria-locked-out.png)
 
 ![Unlock Maria](Screenshots/62-unlock-maria.png)
+
+## Step 34: Session 5 checkpoints
+- **What I did:** Shut down WS01, then DC01, and created "Session 5 complete" checkpoints on both VMs.
+- **Why it matters:** Saves a working environment with hardened domain policies before the joiner, mover, leaver work in Session 6.
+- **Issues and how I fixed them:** None.
+
+![Session 5 checkpoints](Screenshots/63-checkpoints-session5.png)

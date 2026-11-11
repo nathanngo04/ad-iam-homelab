@@ -331,3 +331,13 @@
 - **Issues and how I fixed them:** None.
 
 ![Session 5 checkpoints](Screenshots/63-checkpoints-session5.png)
+
+## Session 6: Joiner, mover, leaver lifecycle
+
+## Step 35: Onboarded a new hire (joiner)
+- **What I did:** Scripted onboarding in joiner.ps1: created Sofia Martinez (Finance, Accounts Payable Specialist) with New-ADUser, set her manager at creation, kept the account disabled until her start date, added her to SG-Finance, then enabled the account with Enable-ADAccount. Verified with Get-ADUser.
+- **Why it matters:** Pre-staging accounts as disabled avoids active, unmonitored accounts before start dates. Access comes from the role-based group, not copied from a coworker, which follows least privilege. The temporary password had to meet the 14-character policy from Session 5.
+- **Issues and how I fixed them:** None.
+
+![Joiner verified](Screenshots/64-joiner-sofia.png)
+

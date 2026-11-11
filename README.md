@@ -363,4 +363,3 @@
 ![Marcus Finance access granted](Screenshots/66-marcus-finance-access.png)
 
 ![Marcus HR denied](Screenshots/67-marcus-hr-denied.png)
-

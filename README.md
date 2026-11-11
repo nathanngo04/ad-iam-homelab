@@ -376,3 +376,19 @@
 ![Managers NTFS permissions](Screenshots/69-managers-ntfs-permissions.png)
 
 ![Managers share permissions](Screenshots/70-managers-share-permissions.png)
+
+## Step 39: Mover (Marcus Reed to Operations)
+- **What I did:** Recorded his groups, updated title, description, department, and manager (Jordan Hayes), added to SG-Operations , removed SG-Finance, moved him to the Operations OU. Verified with Get-ADUser. Saved the same process as mover.ps1.
+- **Why it matters:** Removing old access prevent privilege creep. OUs organize accounts; groups grant access.
+- **Issues and how I fixed them:** None.
+
+![Marcus groups before](Screenshots/71-marcus-member-of-before.png)
+
+![Marcus groups after](Screenshots/72-marcus-member-of-after.png)
+
+![Marcus organization after](Screenshots/73-marcus-organization-after.png)
+
+![Marcus in Operations OU](Screenshots/74-marcus-operations-ou.png)
+
+![Marcus mover verified](Screenshots/75-marcus-mover-verified.png)
+

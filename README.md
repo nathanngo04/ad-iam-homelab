@@ -198,7 +198,7 @@
 ![Role groups verified](Screenshots/40-role-groups-verify.png)
 
 ## Step 21: Session 3 verification and checkpoint
-- **What I did:** Confirmed Maria Lopez belonds to Domain Users, SG-IT, and SG-IT-HelpDesk, showing layered access by organization, department, and role. Copied all scripts to the project folder, shut down DC01, and created a "Session 3 complete" checkpoint.
+- **What I did:** Confirmed Maria Lopez belongs to Domain Users, SG-IT, and SG-IT-HelpDesk, showing layered access by organization, department, and role. Copied all scripts to the project folder, shut down DC01, and created a "Session 3 complete" checkpoint.
 - **Why it matters:** Users typically belong to several groups, each granting a different slice of access. The checkpoint preserves a fully organized domain before Group Policy changes.
 - **Issues and how I fixed them:** None.
 
@@ -208,12 +208,17 @@
 
 ## Session 4: Domain-joined Windows 11 Workstation
 
+## Step 22: Planned memory for two VMs
+- **What I did:** Checked available host memory before building a second VM and planned around the 4 GB Windows 11 installer requirement.
+- **Why it matters:** Running two VMs on 16 GB (4.4 GB reserved by integrated graphics) requires deliberate resource planning.
+- **Issues and how I fixed them:** See Step 23.
+
 ## Step 23: Created and installed WS01 workstation
-- **What I did:** Created a generation 2 VM named WS01 with 2 virtual processors, a 64 GB dynamically expanding disk, TPM and Secure Boot enabled, and a connection to LabNet. Installed Windows 11 Enterprise Evaluation with a separate local admin account, then lowered memory to 2 GB startup (1 GB minimum, 3 GB maximum) after installation.
+- **What I did:** Created a Generation 2 VM named WS01 with 2 virtual processors, a 64 GB dynamically expanding disk, TPM and Secure Boot enabled, and a connection to LabNet. Installed Windows 11 Enterprise Evaluation with a separate local admin account, then lowered memory to 2 GB startup (1 GB minimum, 3 GB maximum) after installation.
 - **Why it matters:** WS01 represents an employee's computer. Windows 11 requires TPM 2.0, Secure Boot, 2 processors, 4 GB RAM to install, and a 64 GB disk, reflecting modern endpoint security baselines. Enterprise edition supports domain join; Windows 11 Home does not.
 - **Issues and how I fixed them:** 
-- Only 2.4 GB was available with DC01 running, below the installer's 4 GB requirement. Hyper-V VM memory doesn't appear in Task Manager's process list. Installed WS01 with DC01 shut down, capped DC01's maximum memory at 3 GB, then reduced WS01 to 2 GB startup after installation.
-- Clicked Finish before capturing the wizard summary; use the VM Settings page instead.
+    - Only 2.4 GB was available with DC01 running, below the installer's 4 GB requirement. Hyper-V VM memory doesn't appear in Task Manager's process list. Installed WS01 with DC01 shut down, capped DC01's maximum memory at 3 GB, then reduced WS01 to 2 GB startup after installation.
+    - Clicked Finish before capturing the wizard summary; used the VM Settings page instead.
 
 ![WS01 settings](Screenshots/43-ws01-settings.png)
 
@@ -232,8 +237,8 @@
 
 ## Step 25: Activated Windows
 - **What I did:** Investigated a "Windows License is expired" watermark. Confirmed internet access, checked license details with slmgr /dlv and activated online with slmgr /ato.
-- **Why it matters:** An unactivated evaluation can restrict use. Diagnosing the cuase avoided an unnecessary reinstall.
-- **Issues and how I fixed them:** The warning appeared becauase WS01 had no network during setup and couldn't activate. Activation succeeded once networking was configured, and the license now shows valid for 90 days.
+- **Why it matters:** An unactivated evaluation can restrict use. Diagnosing the cause avoided an unnecessary reinstall.
+- **Issues and how I fixed them:** The warning appeared because WS01 had no network during setup and couldn't activate. Activation succeeded once networking was configured, and the license now shows valid for 90 days.
 
 ![WS01 activated](Screenshots/48-ws01-activated.png)
 
@@ -249,7 +254,7 @@
 ![whoami as Maria](Screenshots/51-maria-whoami.png)
 
 ## Step 27: Moved WS01 into the Workstations OU
-- **What I did:** Moved the WS01 computer account from the default Computers container account from the default Computers container to SonderEnergy/Computers/Workstations in ADUC.
+- **What I did:** Moved the WS01 computer account from the default Computers container to SonderEnergy/Computers/Workstations in ADUC.
 - **Why it matters:** New computers land in the default Computers container, which can't receive Group Policy. Placing WS01 in the Workstations OU lets workstation policies apply to it.
 - **Issues and how I fixed them:** None.
 
@@ -275,22 +280,22 @@
 - **Why it matters:** The default lockout threshold was 0, meaning accounts never lock and password guessing is unlimited. Minimum length was only 7.
 - **Issues and how I fixed them:**
     - WS01 failed to start from low host memory. Disabled unneeded startup apps, restarted the host, and started DC01 before WS01.
-    - The GPMC Settings report was blocked by IE Enhanced Security Configuration. Allowed only the local about:security_mmc.exe page, keeping we browsing blocked on the DC.
+    - The GPMC Settings report was blocked by IE Enhanced Security Configuration. Allowed only the local about:security_mmc.exe page, keeping web browsing blocked on the DC.
 
 ![Default Domain Policy](Screenshots/54-gpmc-default-policy.png)
 
 ## Step 30: Hardened password and lockout policy
 - **What I did:** Edited the Default Domain Policy: minimum password length 14, maximum password age 365 days, account lockout threshold 10, lockout duration 15 minutes, and counter reset after 15 minutes.
-- **Why it matters:** Length is the strongest defense against password cracking. Lockout stops brute force guessing. Following NIST SP 800-63B, avoided frequent forced changes that lead to predictable password. Domain password policy only applies from a GPO linked at the domain level.
+- **Why it matters:** Length is the strongest defense against password cracking. Lockout stops brute force guessing. Following NIST SP 800-63B, avoided frequent forced changes that lead to predictable passwords. Domain password policy only applies from a GPO linked at the domain level.
 - **Issues and how I fixed them:** None.
 
-[!Password policy](Screenshots/55-password-policy.png)
+![Password policy](Screenshots/55-password-policy.png)
 
 ![Lockout policy](Screenshots/56-lockout-policy.png)
 
 ## Step 31: Created a workstation security GPO
 - **What I did:** Created and linked SE-Workstation-Security to the Workstations OU, using a naming convention (company prefix, target, purpose). Configured a 15-minute inactivity lock, hid the last signed-in user, and added a legal logon banner.
-- **Why it matters:** Linking at the OU level targets only workstations, not servers. These settings recude risk from unattended computers, avoid exposing valid usernames, and meet common compliance expectations for logon banners.
+- **Why it matters:** Linking at the OU level targets only workstations, not servers. These settings reduce risk from unattended computers, avoid exposing valid usernames, and meet common compliance expectations for logon banners.
 - **Issues and how I fixed them:** None.
 
 ![Workstation GPO settings](Screenshots/57-workstation-gpo-settings.png)
@@ -315,7 +320,7 @@
 ![gpresult output](Screenshots/59-ws01-gpresult.png)
 
 ## Step 33: Tested account lockout and unlock
-- **What I did:** Entered 10 wrong passwords for maria.lopez on WS01 to trigger lockout, found the locked account with Search-ADAccount-LockedOut, unlocked it with Unlock-ADAccount, and confirmed she could sign in again.
+- **What I did:** Entered 10 wrong passwords for maria.lopez on WS01 to trigger lockout, found the locked account with Search-ADAccount -LockedOut, unlocked it with Unlock-ADAccount, and confirmed she could sign in again.
 - **Why it matters:** Proves the lockout policy stops brute force attempts domain-wide. Finding and unlocking accounts is a common help desk task, and should follow identity verification to prevent social engineering.
 - **Issues and how I fixed them:** None.
 
@@ -342,8 +347,8 @@
 ![Joiner verified](Screenshots/64-joiner-sofia.png)
 
 ## Step 36: Created department file shares
-- **What I did:** Scripted create-shares.ps1 to create five department shares (Engineering, Finance, HR, IT, Operations). Removed inherited NTFS permissions with icacls and granted only Domain Admins, SYSTEM, and the matching department group (Modify). Shared each folder with New-SmbShare, limited to admins and the department group. Reviewed the result in the Security tab and Effetive Access.
-- **Why it matters:** Security groups grant nothing until they're tied to resources. Restricting both share and NTFS permissions to role-based groups means access follow group membership (RBAC), and employees get Modify, not Full control, so they can't grant access to others (least privilge). In production, shares would live on a dedicated file server, not a DC.
+- **What I did:** Scripted create-shares.ps1 to create five department shares (Engineering, Finance, HR, IT, Operations). Removed inherited NTFS permissions with icacls and granted only Domain Admins, SYSTEM, and the matching department group (Modify). Shared each folder with New-SmbShare, limited to admins and the department group. Reviewed the result in the Security tab and Effective Access.
+- **Why it matters:** Security groups grant nothing until they're tied to resources. Restricting both share and NTFS permissions to role-based groups means access follows group membership (RBAC), and employees get Modify, not Full control, so they can't grant access to others (least privilege). In production, shares would live on a dedicated file server, not a DC.
 - **Issues and how I fixed them:** Realized the department groups weren't granting access to anything yet. Added file shares so group membership controls real resources.
 
 ![File shares](Screenshots/65-file-shares.png)
@@ -351,7 +356,7 @@
 ![Effective access](Screenshots/65b-finance-effective-access.png)
 
 ## Step 37: Tested group-based access
-- **What I did:** Signed into WS01 as marcus.reed (forced password change, meeting 14-character policy enforced). Opened \\DC01\Finance successfully as a member of SG-Finance, and was denied at \\DC01\HR.
+- **What I did:** Signed into WS01 as marcus.reed (forced password change, meeting the 14-character policy enforced). Opened \\DC01\Finance successfully as a member of SG-Finance, and was denied at \\DC01\HR.
 - **Why it matters:** Proves security groups control real access: same user, same server, different result based only on group membership.
 - **Issues and how I fixed them:** None.
 

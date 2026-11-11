@@ -364,3 +364,15 @@
 
 ![Marcus HR denied](Screenshots/67-marcus-hr-denied.png)
 
+## Step 38: Built the Managers share manually
+- **What I did:** Created C:\Shares\Managers, removed inherited NTFS permissions, granted Domain Admins and SYSTEM Full Control and SG-Manager Modify. Shared it as \\DC01\Managers with Everyone removed, Domain Admins Full, SG-Managers Change.
+- **Why it matters:** Manually rebuilt what create-shares.ps1 automates. Least privilege on both layers (defense in depth); Modify, not Full Control, so users can't change permissions.
+- **Issues and how I fixed them:**
+    - Found an unexpected BUILTIN\Administrators (This folder only) entry. icacls showed the script-built Finance share had the same entry, so it is consistent Windows behavior. Kept for consistency.
+    - Share was first created on the parent folder (C:\Shares), exposing all department folder names. Found it with Get-SmbShare, removed it, and re-shared the correct folder.
+
+![Managers inherited permissions](Screenshots/68-managers-inherited-permissions.png)
+
+![Managers NTFS permissions](Screenshots/69-managers-ntfs-permissions.png)
+
+![Managers share permissions](Screenshots/70-managers-share-permissions.png)

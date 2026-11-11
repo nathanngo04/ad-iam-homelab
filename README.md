@@ -392,3 +392,22 @@
 
 ![Marcus mover verified](Screenshots/75-marcus-mover-verified.png)
 
+## Step 40: Leaver (Carlos Rivera Offboarded)
+- **What I did:** Recorded his groups, disabled the account, set a dated description, removed all groups, and moved him to DisabledUsers. Verified with Get-ADUser. Saved the process as leaver.ps1.
+- **Why it matters:** Disabling (not deleting) keeps the SID, logs, and data for investigations or rehire. Removing groups means an accidental re-enable grants no access.
+- **Issues and how I fixed them:** None.
+
+![Carlos groups before](Screenshots/76-carlos-member-of-before.png)
+
+![Carlos disabled](Screenshots/77-carlos-disabled.png)
+
+![Carlos in DisabledUsers](Screenshots/78-carlos-disabled-users.png)
+
+![Carlos leaver verified](Screenshots/79-carlos-leaver-verified.png)
+
+## Step 41: Delegated password resets to help desk
+- **What I did:** Used the Delegation of Control Wizard on the Users OU to give SG-IT-HelpDesk the right to reset passwords and force a change at next logon.
+- **Why it matters:** Least Privilege: help desk can reset employee passwords without Domain Admin rights. Scoped to the UsersOU, so admin and service accounts are excluded.
+- **Issues and how I fixed them:** None.
+
+![Help desk delegation](Screenshots/80-helpdesk-delegation.png)

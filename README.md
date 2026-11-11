@@ -341,3 +341,21 @@
 
 ![Joiner verified](Screenshots/64-joiner-sofia.png)
 
+## Step 36: Created department file shares
+- **What I did:** Scripted create-shares.ps1 to create five department shares (Engineering, Finance, HR, IT, Operations). Removed inherited NTFS permissions with icacls and granted only Domain Admins, SYSTEM, and the matching department group (Modify). Shared each folder with New-SmbShare, limited to admins and the department group. Reviewed the result in the Security tab and Effetive Access.
+- **Why it matters:** Security groups grant nothing until they're tied to resources. Restricting both share and NTFS permissions to role-based groups means access follow group membership (RBAC), and employees get Modify, not Full control, so they can't grant access to others (least privilge). In production, shares would live on a dedicated file server, not a DC.
+- **Issues and how I fixed them:** Realized the department groups weren't granting access to anything yet. Added file shares so group membership controls real resources.
+
+![File shares](Screenshots/65-file-shares.png)
+
+![Effective access](Screenshots/65b-finance-effective-access.png)
+
+## Step 37: Tested group-based access
+- **What I did:** Signed into WS01 as marcus.reed (forced password change, meeting 14-character policy enforced). Opened \\DC01\Finance successfully as a member of SG-Finance, and was denied at \\DC01\HR.
+- **Why it matters:** Proves security groups control real access: same user, same server, different result based only on group membership.
+- **Issues and how I fixed them:** None.
+
+![Marcus Finance access granted](Screenshots/66-marcus-finance-access.png)
+
+![Marcus HR denied](Screenshots/67-marcus-hr-denied.png)
+

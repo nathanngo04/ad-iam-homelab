@@ -356,10 +356,11 @@
 ![Effective access](Screenshots/65b-finance-effective-access.png)
 
 ## Step 37: Tested group-based access
-- **What I did:** Signed into WS01 as marcus.reed (forced password change, meeting the 14-character policy enforced). Opened \\DC01\Finance successfully as a member of SG-Finance, and was denied at \\DC01\HR.
+- **What I did:** Signed into WS01 as marcus.reed (forced password change, with the 14-character policy enforced). Opened \\DC01\Finance successfully as a member of SG-Finance, and was denied at \\DC01\HR.
 - **Why it matters:** Proves security groups control real access: same user, same server, different result based only on group membership.
 - **Issues and how I fixed them:** None.
 
 ![Marcus Finance access granted](Screenshots/66-marcus-finance-access.png)
 
 ![Marcus HR denied](Screenshots/67-marcus-hr-denied.png)
+

@@ -411,3 +411,13 @@
 - **Issues and how I fixed them:** None.
 
 ![Help desk delegation](Screenshots/80-helpdesk-delegation.png)
+
+## Step 42: Tested Marcus's access after the move
+- **What I did:** Signed into WS01 as marcus.reed. \\DC01\Operations opened and \\DC01\Finance was denied.
+- **Why it matters:** Same user, same server, opposite result from Step 37. Access followed group membership (RBAC). A fresh sign-in issues a new Kerberos ticket, so the change applied immediately.
+- **Issues and how I fixed them:** None.
+
+![Marcus Operations access](Screenshots/81-marcus-operations-access.png)
+
+![Marcus Finance denied](Screenshots/82-marcus-finance-denied.png)
+

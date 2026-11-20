@@ -421,3 +421,15 @@
 
 ![Marcus Finance denied](Screenshots/82-marcus-finance-denied.png)
 
+## Step 43: Tested help desk delegation
+- **What I did:** Confirmed maria.lopez is in SG-IT-HelpDesk. Checked Effective Access on Sofia's account (Reset password allowed). Ran Set-ADAccountPassword with Maria's credentials: reset Sofia succeeded, reset Administrator was denied.
+- **Why it matters:** Proves least privilege both ways: help desk can reset employee passwords but cannot take over admin accounts.
+- **Issues and how I fixed them:** 
+    - net user/domain returned Access denied even though Effective Access showed Reset password allowed. Used Set-ADAccountPassword instead.
+    - First Administrator tests failed at authentication (mistyped credentials, badPwdCount 2), not authorization. Proved Maria's credentials with a read-only Get-ADUser, then reran for a true Access denied result.
+
+![Maria effective access on Sofia](Screenshots/83-maria-effective-access-sofia.png)
+
+![Help desk reset success](Screenshots/84-helpdesk-reset-success.png)
+
+![Help desk reset admin denied](Screenshots/85-helpdesk-reset-admin-denied.png)
